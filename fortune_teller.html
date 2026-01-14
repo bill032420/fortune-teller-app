@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO SEE THE FUTURE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+TC:wght@300;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #050a10 0%, #000000 100%);
+            --card-bg: rgba(12, 28, 40, 0.95); /* 稍微調深一點，增加對比 */
+            --card-border: 1px solid rgba(197, 160, 95, 0.3);
+            --text-primary: #e6e6e6;
+            --accent-gold: #d4af37;
+            --accent-highlight: #f1c40f;
+            --input-bg: #0f151a; /* 改為純色背景，避免透明度造成閱讀困難 */
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            font-family: 'Lato', 'Noto Serif TC', serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 8vh;
+            margin-bottom: 5vh;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: var(--card-border);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            padding: 50px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-gold);
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            letter-spacing: 6px;
+            text-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+            border-bottom: 1px solid rgba(197, 160, 95, 0.15);
+            padding-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            margin-bottom: 35px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: 'Cinzel', sans-serif;
+            font-weight: bold;
+        }
+
+        /* 輸入框樣式 */
+        .styled-input {
+            width: 100%;
+            padding: 18px 20px;
+            background-color: var(--input-bg); /* 強制背景色 */
+            border: 1px solid rgba(197, 160, 95, 0.3);
+            border-radius: 8px;
+            color: #d4af37; /* 字體改金黃色，確保在深色背景清楚 */
+            font-size: 1.1rem;
+            font-family: 'Lato', 'Noto Serif TC', serif;
+            box-sizing: border-box;
+            appearance: none;
+        }
+
+        /* 🔴 關鍵修復：針對下拉選單的選項 (Option) 強制上色 */
+        select.styled-input option {
+            background-color: #000000; /* 選單展開後的背景：全黑 */
+            color: #d4af37;            /* 選單展開後的文字：金色 */
+            padding: 10px;
+        }
+
+        .styled-input:focus {
+            outline: none;
+            border-color: var(--accent-highlight);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+        }
+
+        /* 下拉選單箭頭 */
+        select.styled-input {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 18px;
+            padding-right: 50px;
+        }
+
+        /* 日期選擇器箭頭 */
+        input.flatpickr-input {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 20px;
+        }
+
+        /* 日曆插件配色 */
+        .flatpickr-calendar.dark {
+            background: #0f151a;
+            border: 1px solid var(--accent-gold);
+        }
+        .flatpickr-day.selected {
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+            color: #000;
+        }
+
+        /* 按鈕 */
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #d4af37 0%, #9e7f40 100%);
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            color: #050a10;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 5px;
+            font-family: 'Cinzel', serif;
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #f1c40f 0%, #b8860b 100%);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+        .btn-submit:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            border-color: #444;
+        }
+
+        /* 結果內容 */
+        .result-content {
+            line-height: 2;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+        .result-content h2 {
+            font-family: 'Cinzel', 'Noto Serif TC', serif;
+            color: var(--accent-highlight);
+            font-size: 1.6rem;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 20px;
+            background: linear-gradient(90deg, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 100%);
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+        .result-content h3 { color: var(--accent-gold); margin-top: 30px; font-weight: 600; }
+        .result-content strong { color: var(--accent-highlight); }
+        .result-content ul { list-style: none; padding-left: 0; }
+        .result-content ul li { position: relative; padding-left: 30px; margin-bottom: 15px; border-bottom: 1px dashed rgba(197, 160, 95, 0.15); padding-bottom: 10px; }
+        .result-content ul li::before { content: "✦"; position: absolute; left: 0; color: var(--accent-gold); }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--accent-gold);
+            font-family: 'Cinzel', serif;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="glass-card">
+        <h1>TO SEE THE FUTURE</h1>
+        
+        <div id="inputSection">
+            <div class="input-group">
+                <label for="userName">NAME / 姓名</label>
+                <input type="text" id="userName" class="styled-input" placeholder="請輸入您的姓名">
+            </div>
+
+            <div class="input-group">
+                <label for="birthDate">BIRTH DATE / 出生日期</label>
+                <input type="text" id="birthDate" class="styled-input" placeholder="點擊選擇星盤降臨日...">
+            </div>
+
+            <div class="input-group">
+                <label for="mbti">MBTI / 人格類型</label>
+                <select id="mbti" class="styled-input">
+                    <option value="" disabled selected>請選擇您的靈魂原型</option>
+                    <option value="ENTJ">ENTJ - 指揮官</option>
+                    <option value="INTJ">INTJ - 建築師</option>
+                    <option value="INFP">INFP - 調停者</option>
+                    <option value="ISFP">ISFP - 探險家</option>
+                    <option value="ENFP">ENFP - 競選者</option>
+                    <option value="INFJ">INFJ - 提倡者</option>
+                    <option value="ESTJ">ESTJ - 總經理</option>
+                    <option value="ISTJ">ISTJ - 物流師</option>
+                    <option value="ENTP">ENTP - 辯論家</option>
+                    <option value="INTP">INTP - 邏輯學家</option>
+                    <option value="ESFP">ESFP - 表演者</option>
+                    <option value="ESTP">ESTP - 企業家</option>
+                    <option value="ISFJ">ISFJ - 守衛者</option>
+                    <option value="ENFJ">ENFJ - 主人公</option>
+                    <option value="ESFJ">ESFJ - 執政官</option>
+                </select>
+            </div>
+
+            <button class="btn-submit" onclick="startDivination()" id="submitBtn">REVEAL DESTINY</button>
+        </div>
+    </div>
+
+    <div class="glass-card" id="resultCard" style="display: none;">
+        <div id="resultArea" class="result-content"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+
+<script>
+    // ============================================
+    // ⚠️ 檢查你的 API KEY
+    // "User not found" 代表 Key 錯誤或帳號不存在
+    // 請確保複製的是完整的 sk-or-v1-.... 字串
+    // ============================================
+    const API_KEY = "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"; // <--- 請再次確認這裡！
+    const API_URL = "https://openrouter.ai/api/v1/chat/completions";
+
+    flatpickr("#birthDate", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+        locale: "zh", 
+        theme: "dark", 
+        disableMobile: "true"
+    });
+
+    async function startDivination() {
+        const name = document.getElementById('userName').value;
+        const birth = document.getElementById('birthDate').value;
+        const mbti = document.getElementById('mbti').value;
+        const btn = document.getElementById('submitBtn');
+        const resultCard = document.getElementById('resultCard');
+        const resultArea = document.getElementById('resultArea');
+
+        if(!name || !birth || !mbti) {
+            alert("請完整輸入所有欄位");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = "CONNECTING...";
+        resultCard.style.display = "block";
+        resultArea.innerHTML = "<div class='loading'>正在連結阿卡西紀錄...</div>";
+        
+        setTimeout(() => {
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+
+        const today = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+
+        const prompt = `
+        日期：${today}
+        用戶姓名：${name}
+        出生時間：${birth}
+        MBTI：${mbti}
+        
+        請扮演一位高深莫測但邏輯精準的神秘學專家，為用戶進行深度運勢解析。
+        請使用 Google Gemma 模型特有的清晰邏輯，按照以下結構輸出內容（使用 Markdown）：
+
+        ## 1. 命盤本質解析
+        (深度分析星座、MBTI 與個人特質)
+
+        ## 2. 今日運勢指南 (${today})
+        * **能量指數**：(例如 85%)
+        * **幸運色與幸運物**：
+        * **宜**：
+        * **忌**：
+        * **今日關鍵字**：
+
+        ## 3. 週期運勢預測
+        * **短期 (本週)**：
+        * **中期 (本月)**：
+        * **長期 (本年)**：
+
+        ## 4. 給 ${mbti} 的專屬行動建議
+        (3 點具體建議)
+
+        語氣要求：高質感、神祕、賦予力量。
+        `;
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${API_KEY}`,
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://localhost", 
+                    "X-Title": "Future Oracle",
+                },
+                body: JSON.stringify({
+                    "model": "google/gemma-3n-e4b-it", 
+                    "messages": [
+                        {"role": "system", "content": "你是一位結合數據分析與神秘學的專家。請用繁體中文回答。"},
+                        {"role": "user", "content": prompt}
+                    ]
+                })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json();
+                // 這裡會抓取具體的錯誤訊息
+                throw new Error(errData.error?.message || "未知連線錯誤");
+            }
+
+            const data = await response.json();
+            const aiContent = data.choices[0].message.content;
+
+            let formattedContent = aiContent
+                .replace(/^###\s+(.*$)/gim, '<h3>$1</h3>')
+                .replace(/^##\s+(.*$)/gim, '<h2>$1</h2>')
+                .replace(/^#\s+(.*$)/gim, '<h2>$1</h2>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/^\*\s+(.*$)/gim, '<ul><li>$1</li></ul>')
+                .replace(/<\/ul>\s*<ul>/g, '')
+                .replace(/\n/g, '<br>');
+
+            resultArea.innerHTML = formattedContent;
+
+        } catch (error) {
+            // 如果是 User not found，顯示更友善的提示
+            let errorMsg = error.message;
+            if (errorMsg.includes("User not found")) {
+                errorMsg = "API Key 錯誤或帳號不存在 (User not found)。<br>請檢查代碼中的 API_KEY 是否正確。";
+            }
+            resultArea.innerHTML = `<span style="color: #ff4d4d; font-weight: bold;">❌ 發生錯誤：<br>${errorMsg}</span>`;
+            console.error(error);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = "REVEAL DESTINY";
+        }
+    }
+</script>
+
+</body>
+</html>
